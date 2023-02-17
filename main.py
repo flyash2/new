@@ -63,7 +63,7 @@ def get_weather(region):
 
 
 
-    return weather, temp, wind_dir
+    return weather, temp, wind_dir, humidity1
  
 def get_weather2(region):
     headers = {
@@ -95,7 +95,7 @@ def get_weather2(region):
 
 
 
-    return    max_temperature, min_temperature, humidity1
+    return    max_temperature, min_temperature
 
 
 def get_air(region):
@@ -311,9 +311,9 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    weather, temp, wind_dir = get_weather(region)
-    max_temperature, min_temperature, humidity1 = get_weather2(region)
-    air_quality, air_data = def get_air(region)
+    weather, temp, wind_dir, humidity1 = get_weather(region)
+    max_temperature, min_temperature = get_weather2(region)
+    air_quality, air_data = get_air(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
     if note_ch == "" and note_en == "":
