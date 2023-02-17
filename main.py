@@ -29,7 +29,8 @@ def get_access_token():
         sys.exit(1)
     # print(access_token)
     return access_token
-   
+ 
+ 
 def get_weather(region):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -60,15 +61,80 @@ def get_weather(region):
     # 湿度
     humidity1 = response["now"]["humidity"]
 
+    weather_url = "https://devapi.qweather.com/v7/weather/daily?location={}&key={}".format(location_id, key)
+    response = get(weather_url, headers=headers).json()
+    # 最高温度
+    max_temperature = response["daily"]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
+    # 最低温度
+    min_temperature = response["daily"]["tempMin"] + u"\N{DEGREE SIGN}" + "C"
 
 
     return weather, temp, wind_dir, humidity1
-
  
+def get_weather2(region):
+    headers = {
+         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                       'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+     }
+    key = config["weather_key"]
+    region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
+    response = get(region_url, headers=headers).json()
+    if response["code"] == "404":
+        print("推送消息失败，请检查地区名是否有误！")
+        os.system("pause")
+        sys.exit(1)
+    elif response["code"] == "401":
+        print("推送消息失败，请检查和风天气key是否正确！")
+        os.system("pause")
+        sys.exit(1)
+    else:
+         # 获取地区的location--id
+         location_id = response["location"][0]["id"]
+    weather_url = "https://devapi.qweather.com/v7/weather/daily?location={}&key={}".format(location_id, key)
+    response = get(weather_url, headers=headers).json()
+    # 最高温度
+    max_temperature = response["daily"]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
+    # 最低温度
+    min_temperature = response["daily"]["tempMin"] + u"\N{DEGREE SIGN}" + "C"
 
 
 
 
+
+    return    max_temperature, min_temperature
+
+
+def get_air(region):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    }
+    key = config["weather_key"]
+    region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
+    response = get(region_url, headers=headers).json()
+    if response["code"] == "404":
+        print("推送消息失败，请检查地区名是否有误！")
+        os.system("pause")
+        sys.exit(1)
+    elif response["code"] == "401":
+        print("推送消息失败，请检查和风天气key是否正确！")
+        os.system("pause")
+        sys.exit(1)
+    else:
+        # 获取地区的location--id
+        location_id = response["location"][0]["id"]
+    weather_url = "https://api.qweather.com/v7/air/now?location={}&key={}".format(location_id, key)
+    response = get(weather_url, headers=headers).json()
+
+    # 空气质量
+    air_quality = response["now"]["category"]
+    # 空气指数
+    air_data = response["now"]["aqi"]
+
+
+
+
+    return air_quality, air_data
 
 
 def get_birthday(birthday, year, today):
@@ -251,9 +317,9 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    weather, temp, wind_dir, humidity1 = get_weather(region)
-
-    air_quality, air_data = get_air(region)
+    weather, temp, wind_dir = get_weather(region)
+    max_temperature, min_temperature, humidity1 = get_weather2(region)
+    air_quality, air_data = def get_air(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
     if note_ch == "" and note_en == "":
