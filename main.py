@@ -56,9 +56,22 @@ def get_weather(region):
     weather = response["now"]["text"]
     # 当前温度
     temp = response["now"]["temp"] + u"\N{DEGREE SIGN}" + "C"
-    # 风向
-    wind_dir = response["now"]["windDir"]
-    return weather, temp, wind_dir
+    # 风向风力
+    wind_dir = response["now"]["windScale"] +"级"+ response["now"]["windDir"]
+    # 最高温度
+    max_temperature = response["daily"]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
+    # 最低温度
+    min_temperature = response["daily"]["tempMin"] + u"\N{DEGREE SIGN}" + "C"
+    # 湿度
+    humidity1 = response["daily"]["humidity"]
+    # 空气质量
+    air_quality = response["now"]["category"]
+    # 空气指数
+    air_data = response["now"]["aqi"]
+
+
+
+    return weather, temp, wind_dir, max_temperature, min_temperature, humidity1, air_quality, air_data
  
  
 def get_birthday(birthday, year, today):
@@ -165,6 +178,26 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
                 "value": love_days,
                 "color": get_color()
             },
+            "max_temperature": {
+                "value": max_temperature,
+                "color": get_color()
+                        },
+            "min_temperature": {
+                 "value": min_temperature,
+                 "color": get_color()
+                         },
+            "humidity1": {
+                 "value": humidity1,
+                 "color": get_color()
+                        },
+            "air_quality": {
+                  "value": air_quality,
+                  "color": get_color()
+                                    },
+            "air_data": {
+                  "value": air_data,
+                  "color": get_color()
+                                    },
             "note_en": {
                 "value": note_en,
                 "color": get_color()
@@ -221,7 +254,7 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    weather, temp, wind_dir = get_weather(region)
+    weather, temp, wind_dir, max_temperature, min_temperature, humidity1, air_quality, air_data = get_weather(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
     if note_ch == "" and note_en == "":
