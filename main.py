@@ -29,41 +29,43 @@ def get_access_token():
         sys.exit(1)
     # print(access_token)
     return access_token
- 
- 
-
- 
-def get_weather2(region):
+   
+def get_weather(region):
     headers = {
-         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                       'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-     }
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    }
     key = config["weather_key"]
     region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
-    response1 = get(region_url, headers=headers).json()
-    if response1["code"] == "404":
+    response = get(region_url, headers=headers).json()
+    if response["code"] == "404":
         print("推送消息失败，请检查地区名是否有误！")
         os.system("pause")
         sys.exit(1)
-    elif response1["code"] == "401":
+    elif response["code"] == "401":
         print("推送消息失败，请检查和风天气key是否正确！")
         os.system("pause")
         sys.exit(1)
     else:
-         # 获取地区的location--id
-         location_id = response1["location"][0]["id"]
-    weather_url = "https://devapi.qweather.com/v7/weather/daily?location={}&key={}".format(location_id, key)
-    response1 = get(weather_url, headers=headers).json()
-    # 最高温度
-    max_temperature = response1["daily"]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
-    # 最低温度
-    min_temperature = response1["daily"]["tempMin"] + u"\N{DEGREE SIGN}" + "C"
+        # 获取地区的location--id
+        location_id = response["location"][0]["id"]
+    weather_url = "https://devapi.qweather.com/v7/weather/now?location={}&key={}".format(location_id, key)
+    response = get(weather_url, headers=headers).json()
+    # 天气
+    weather = response["now"]["text"]
+    # 当前温度
+    temp = response["now"]["temp"] + u"\N{DEGREE SIGN}" + "C"
+    # 风向风力
+    wind_dir = response["now"]["windScale"] +"级"+ response["now"]["windDir"]
+    # 湿度
+    humidity1 = response["now"]["humidity"]
 
 
 
+    return weather, temp, wind_dir, humidity1
 
+ 
 
-    return    max_temperature, min_temperature
 
 
 def get_air(region):
@@ -279,8 +281,8 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    
-    max_temperature, min_temperature = get_weather2(region)
+    weather, temp, wind_dir, humidity1 = get_weather(region)
+
     air_quality, air_data = get_air(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
