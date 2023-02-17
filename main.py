@@ -5,7 +5,6 @@ from datetime import datetime, date
 from zhdate import ZhDate
 import sys
 import os
-# -- coding: utf-8 --**
  
 def get_color():
     # 获取随机颜色
@@ -34,7 +33,7 @@ def get_access_token():
 def get_weather(region):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+                      
     }
     key = config["weather_key"]
     region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
