@@ -319,7 +319,7 @@ if __name__ == "__main__":
     region = config["region"]
     weather, temp, wind_dir = get_weather(region)
     max_temperature, min_temperature, humidity1 = get_weather2(region)
-    air_quality, air_data = def get_air(region)
+    air_quality, air_data = get_air(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
     if note_ch == "" and note_en == "":
