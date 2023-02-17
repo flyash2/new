@@ -83,7 +83,7 @@ def get_weather2(region):
         sys.exit(1)
     else:
          # 获取地区的location--id
-         location_id = response["location"][0]["id"]
+         location_id = response1["location"][0]["id"]
     weather_url = "https://devapi.qweather.com/v7/weather/daily?location={}&key={}".format(location_id, key)
     response1 = get(weather_url, headers=headers).json()
     # 最高温度
