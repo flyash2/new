@@ -50,13 +50,17 @@ def get_weather(region):
     else:
         # 获取地区的location--id
         location_id = response["location"][0]["id"]
-    
-    weather_url = "https://devapi.qweather.com/v7/weather/daily?location={}&key={}".format(location_id, key)
+    weather_url = "https://devapi.qweather.com/v7/weather/now?location={}&key={}".format(location_id, key)
     response = get(weather_url, headers=headers).json()
-    # 最高温度
-    max_temperature = response["daily"]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
-    # 最低温度
-    min_temperature = response["daily"]["tempMin"] + u"\N{DEGREE SIGN}" + "C"
+    # 天气
+    weather = response["now"]["text"]
+    # 当前温度
+    temp = response["now"]["temp"] + u"\N{DEGREE SIGN}" + "C"
+    # 风向风力
+    wind_dir = response["now"]["windScale"] +"级"+ response["now"]["windDir"]
+    # 湿度
+    humidity1 = response["now"]["humidity"]
+
 
 
     return weather, temp, wind_dir, humidity1
@@ -67,8 +71,8 @@ def get_weather2(region):
                        'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
      }
     key = config["weather_key"]
-    region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
-    response = get(region_url).json()
+    region_url = "https://geoapi.qweather.com/v7/city/lookup?location={}&key={}".format(region, key)
+    response = get(region_url, headers=headers).json()
     if response["code"] == "404":
         print("推送消息失败，请检查地区名是否有误！")
         os.system("pause")
@@ -307,8 +311,8 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    weather, temp, wind_dir = get_weather(region)
-    max_temperature, min_temperature, humidity1 = get_weather2(region)
+    weather, temp, wind_dir, humidity1 = get_weather(region)
+    max_temperature, min_temperature = get_weather2(region)
     air_quality, air_data = get_air(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
