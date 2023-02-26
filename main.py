@@ -7,7 +7,6 @@ import sys
 import os
 import http.client, urllib, json
 
-
 def get_color():
     # 获取随机颜色
     get_colors = lambda n: list(map(lambda i: "#" + "%06x" % random.randint(0, 0xFFFFFF), range(n)))
@@ -59,7 +58,10 @@ def get_weather():
     # 空气指数
     air_data = dict_data["result"]["aqi"]
 
-    return weather, temp, wind_dir, humidity1, max_temperature, min_temperature, air_quality, air_data
+
+    return weather, temp, wind_dir, humidity1,max_temperature,min_temperature,air_quality,air_data
+
+
 
 
 def get_birthday(birthday, year, today):
@@ -104,16 +106,16 @@ def get_birthday(birthday, year, today):
 
 
 def get_ciba():
-    conn = http.client.HTTPSConnection('apis.tianapi.com')  # 接口域名
-    params = urllib.parse.urlencode({'key': '820b7fdc01131d5ee42a90cd0a8b6985'})
-    headers = {'Content-type': 'application/x-www-form-urlencoded'}
-    conn.request('POST', '/caihongpi/index', params, headers)
-    tianapi = conn.getresponse()
-    result = tianapi.read()
-    data = result.decode('utf-8')
-    dict_data = json.loads(data)
-    note_ch = dict_data['result']['content']
-    return note_ch
+    url = "http://open.iciba.com/dsapi/"
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    }
+    r = get(url, headers=headers)
+    note_en = r.json()["content"]
+    note_ch = r.json()["note"]
+    return note_ch, note_en
 
 
 def send_message(to_user, access_token, region_name, weather, temp, wind_dir, note_ch, note_en, max_temperature,
@@ -243,13 +245,14 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    weather, temp, wind_dir, humidity1, max_temperature, min_temperature, air_quality, air_data = get_weather()
+    weather, temp, wind_dir, humidity1,max_temperature,min_temperature,air_quality,air_data = get_weather()
     note_ch = config["note_ch"]
-    if note_ch == "1":
+    note_en = config["note_en"]
+    if note_ch == "1" and note_en == "1":
         # 获取词霸每日金句
-        note_ch = get_ciba()
+        note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
         send_message(user, accessToken, region, weather, temp, wind_dir, max_temperature,
-                     min_temperature, humidity1, note_ch, air_quality, air_data)
+                     min_temperature, humidity1, note_ch, note_en,air_quality, air_data)
     os.system("pause")
