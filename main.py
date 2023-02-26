@@ -5,6 +5,7 @@ from datetime import datetime, date
 from zhdate import ZhDate
 import sys
 import os
+import http.client, urllib, json
 
 def get_color():
     # 获取随机颜色
@@ -30,64 +31,37 @@ def get_access_token():
     return access_token
 
 
-def get_weather(region):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-    }
-    key = config["weather_key"]
-    region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
-    response = get(region_url, headers=headers).json()
-    if response["code"] == "404":
-        print("推送消息失败，请检查地区名是否有误！")
-        os.system("pause")
-        sys.exit(1)
-    elif response["code"] == "401":
-        print("推送消息失败，请检查和风天气key是否正确！")
-        os.system("pause")
-        sys.exit(1)
-    else:
-        # 获取地区的location--id
-        location_id = response["location"][0]["id"]
-    weather_url = "https://apis.tianapi.com/tianqi/index?location={}&key=820b7fdc01131d5ee42a90cd0a8b6985".format(location_id)
-    response = get(weather_url, headers=headers).json()
+def get_weather():
+    conn = http.client.HTTPSConnection('apis.tianapi.com')  # 接口域名
+    params = urllib.parse.urlencode({'key': '820b7fdc01131d5ee42a90cd0a8b6985', 'city': '101090501', 'type': '1'})
+    headers = {'Content-type': 'application/x-www-form-urlencoded'}
+    conn.request('POST', '/tianqi/index', params, headers)
+    tianapi = conn.getresponse()
+    result = tianapi.read()
+    data = result.decode('utf-8')
+    dict_data = json.loads(data)
+
     # 天气
-    weather = response["weather"]
-   
-
-    return weather
-
-
-
-
-def get_air(region):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-    }
-    key = config["weather_key"]
-    region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
-    response = get(region_url, headers=headers).json()
-    if response["code"] == "404":
-        print("推送消息失败，请检查地区名是否有误！")
-        os.system("pause")
-        sys.exit(1)
-    elif response["code"] == "401":
-        print("推送消息失败，请检查和风天气key是否正确！")
-        os.system("pause")
-        sys.exit(1)
-    else:
-        # 获取地区的location--id
-        location_id = response["location"][0]["id"]
-    weather_url = "https://api.qweather.com/v7/air/now?location={}&key={}".format(location_id, key)
-    response = get(weather_url, headers=headers).json()
-
+    weather = dict_data["result"]["weather"]
+    # 当前温度
+    temp = dict_data["result"]["real"]
+    # 风向风力
+    wind_dir = dict_data["result"]["windsc"] + dict_data["result"]["wind"]
+    # 湿度
+    humidity1 = dict_data["result"]["humidity"]
+    # 最高温度
+    max_temperature = dict_data["result"]["highest"]
+    # 最低温度
+    min_temperature = dict_data["result"]["lowest"]
     # 空气质量
-    air_quality = response["now"]["category"]
+    air_quality = dict_data["result"]["quality"]
     # 空气指数
-    air_data = response["now"]["aqi"]
+    air_data = dict_data["result"]["aqi"]
 
-    return air_quality, air_data
+
+    return weather, temp, wind_dir, humidity1,max_temperature,min_temperature,air_quality,air_data
+
+
 
 
 def get_birthday(birthday, year, today):
@@ -271,9 +245,7 @@ if __name__ == "__main__":
     users = config["user"]
     # 传入地区获取天气信息
     region = config["region"]
-    weather, temp, wind_dir, humidity1 = get_weather(region)
-    
-    air_quality, air_data = get_air(region)
+    weather, temp, wind_dir, humidity1,max_temperature,min_temperature,air_quality,air_data = get_weather()
     note_ch = config["note_ch"]
     note_en = config["note_en"]
     if note_ch == "" and note_en == "":
