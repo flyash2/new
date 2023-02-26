@@ -247,7 +247,7 @@ if __name__ == "__main__":
     region = config["region"]
     weather, temp, wind_dir, humidity1,max_temperature,min_temperature,air_quality,air_data = get_weather()
     note_ch = config["note_ch"]
-    if note_ch == "1" :
+    if note_ch == "1":
         # 获取词霸每日金句
         note_ch = get_ciba()
     # 公众号推送消息
