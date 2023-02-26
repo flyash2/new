@@ -248,11 +248,11 @@ if __name__ == "__main__":
     weather, temp, wind_dir, humidity1,max_temperature,min_temperature,air_quality,air_data = get_weather()
     note_ch = config["note_ch"]
     note_en = config["note_en"]
-    if note_ch == "" and note_en == "":
+    if note_ch == "1" and note_en == "1":
         # 获取词霸每日金句
         note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, region, weather, temp, wind_dir, air_quality, air_data, max_temperature,
-                     min_temperature, humidity1, note_ch, note_en)
+        send_message(user, accessToken, region, weather, temp, wind_dir, max_temperature,
+                     min_temperature, humidity1, note_ch, note_en,air_quality, air_data)
     os.system("pause")
