@@ -254,5 +254,5 @@ if __name__ == "__main__":
     # 公众号推送消息
     for user in users:
         send_message(user, accessToken, region, weather, temp, wind_dir, max_temperature,
-                     min_temperature, humidity1, note_ch, note_en,air_quality, air_data)
+                     min_temperature, humidity1, note_ch,air_quality, air_data)
     os.system("pause")
