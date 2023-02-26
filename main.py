@@ -52,7 +52,7 @@ def get_weather(region):
     weather_url = "https://apis.tianapi.com/tianqi/index?location={}&key=820b7fdc01131d5ee42a90cd0a8b6985".format(location_id)
     response = get(weather_url, headers=headers).json()
     # 天气
-    weather = response["result"]["weather"]
+    weather = response["weather"]
    
 
     return weather
