@@ -49,18 +49,13 @@ def get_weather(region):
     else:
         # 获取地区的location--id
         location_id = response["location"][0]["id"]
-    weather_url = "https://devapi.qweather.com/v7/weather/now?location={}&key={}".format(location_id, key)
+    weather_url = "https://apis.tianapi.com/tianqi/index?location={}&key=820b7fdc01131d5ee42a90cd0a8b6985".format(location_id)
     response = get(weather_url, headers=headers).json()
     # 天气
-    weather = response["now"]["text"]
-    # 当前温度
-    temp = response["now"]["temp"] + u"\N{DEGREE SIGN}" + "C"
-    # 风向风力
-    wind_dir = response["now"]["windScale"] + "级" + response["now"]["windDir"]
-    # 湿度
-    humidity1 = response["now"]["humidity"]
+    weather = response["result"]["weather"]
+   
 
-    return weather, temp, wind_dir, humidity1
+    return weather
 
 
 
