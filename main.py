@@ -6,7 +6,6 @@ from zhdate import ZhDate
 import sys
 import os
 
-啊实打实大
 def get_color():
     # 获取随机颜色
     get_colors = lambda n: list(map(lambda i: "#" + "%06x" % random.randint(0, 0xFFFFFF), range(n)))
@@ -64,33 +63,6 @@ def get_weather(region):
     return weather, temp, wind_dir, humidity1
 
 
-def get_weather2(region):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-    }
-    key = config["weather_key"]
-    region_url = "https://geoapi.qweather.com/v7/city/lookup?location={}&key={}&gzip=n".format(region, key)
-    response = get(region_url, headers=headers).json()
-    if response["code"] == "404":
-        print("推送消息失败，请检查地区名是否有误！")
-        os.system("pause")
-        sys.exit(1)
-    elif response["code"] == "401":
-        print("推送消息失败，请检查和风天气key是否正确！")
-        os.system("pause")
-        sys.exit(1)
-    else:
-        # 获取地区的location--id
-        location_id = response["location"][0]["id"]
-    weather_url = "https://api.qweather.com/v7/weather/3d?location={}&key={}".format(location_id, key)
-    response = get(weather_url, headers=headers).json()
-    # 最高温度
-    max_temperature = response["daily"]["tempMax"] + u"\N{DEGREE SIGN}" + "C"
-    # 最低温度
-    min_temperature = response["daily"]["tempMin"] + u"\N{DEGREE SIGN}" + "C"
-
-    return max_temperature, min_temperature
 
 
 def get_air(region):
@@ -305,7 +277,7 @@ if __name__ == "__main__":
     # 传入地区获取天气信息
     region = config["region"]
     weather, temp, wind_dir, humidity1 = get_weather(region)
-    max_temperature, min_temperature = get_weather2(region)
+    
     air_quality, air_data = get_air(region)
     note_ch = config["note_ch"]
     note_en = config["note_en"]
