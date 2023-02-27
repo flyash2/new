@@ -149,11 +149,11 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
             },
             "region": {
                 "value": region_name,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "weather": {
                 "value": weather,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "temp": {
                 "value": temp,
@@ -161,35 +161,35 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
             },
             "wind_dir": {
                 "value": wind_dir,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "love_day": {
                 "value": love_days,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "max_temperature": {
                 "value": max_temperature,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "min_temperature": {
                 "value": min_temperature,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "humidity1": {
                 "value": humidity1,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "air_quality": {
                 "value": air_quality,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "air_data": {
                 "value": air_data,
-                "color": get_color()
+                "color": 0xFAEDAA
             },
             "note_ch": {
                 "value": note_ch,
-                "color": get_color()
+                "color": 0xFAEDAA
             }
         }
     }
