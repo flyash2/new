@@ -144,52 +144,52 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
         "topcolor": "#FF0000",
         "data": {
             "date": {
-                "value": "{} {}".format(today, week),
-                "color": 0xFFF123
+                "value": "{} {}".format(today, week)
+                
             },
             "region": {
-                "value": region_name,
-                "color": 0xFAEDAA
+                "value": region_name
+                
             },
             "weather": {
-                "value": weather,
-                "color": 0xFAEDAA
+                "value": weather
+              
             },
             "temp": {
-                "value": temp,
-                "color": 0xFAEDAA
+                "value": temp
+              
             },
             "wind_dir": {
-                "value": wind_dir,
-                "color": 0xFAEDAA
+                "value": wind_dir
+                
             },
             "love_day": {
-                "value": love_days,
-                "color": 0xFAEDAA
+                "value": love_days
+              
             },
             "max_temperature": {
-                "value": max_temperature,
-                "color": 0xFAEDAA
+                "value": max_temperature
+              
             },
             "min_temperature": {
-                "value": min_temperature,
-                "color": 0xFAEDAA
+                "value": min_temperature
+               
             },
             "humidity1": {
-                "value": humidity1,
-                "color": 0xFAEDAA
+                "value": humidity1
+            
             },
             "air_quality": {
-                "value": air_quality,
-                "color": 0xFAEDAA
+                "value": air_quality
+                
             },
             "air_data": {
-                "value": air_data,
-                "color": 0xFAEDAA
+                "value": air_data
+               
             },
             "note_ch": {
-                "value": note_ch,
-                "color": 0xFAEDAA
+                "value": note_ch
+               
             }
         }
     }
